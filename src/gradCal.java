@@ -6,7 +6,7 @@ public class gradCal {
 		Scanner input = new Scanner(System.in);
 		
 		/*** Block for Homework ***/
-		int[] homeworkMarks = new int[5];
+		double[] homeworkMarks = new double[5];
 		boolean onTime;
 		boolean withIn24h;
 		
@@ -14,58 +14,55 @@ public class gradCal {
 			System.out.print("Enter Grade for Homework # " + (i+1) +" --> ");
 			homeworkMarks[i] = input.nextInt();
 			if(homeworkMarks[i] > 100 || homeworkMarks[i] < 0) {
-				System.out.println("Invalid input.");
+				System.out.println("Input should be less than 100.");
 				i--;
 				continue;
 			}
 			System.out.println("Was Homework # " + (i+1) + " submitted on time?  true\\false");
 			onTime = input.nextBoolean();
 			if(onTime != true) {
-				homeworkMarks[i] = (homeworkMarks[i] / 100) * 75;
+				homeworkMarks[i] = (homeworkMarks[i] - 25);
 				System.out.println("Was Homework # " + (i+1) + " submitted within 24h? true\\false");
 				withIn24h = input.nextBoolean();
 				if(withIn24h != true) {
-					homeworkMarks[i] = (homeworkMarks[i] / 100) * 50;
+					homeworkMarks[i] = (homeworkMarks[i] - 50);
 				}
 			}
-		}
-		for(int i = 0; i < 5; i++) {
-			System.out.println(homeworkMarks[i]);
+			if(homeworkMarks[i] < 0)
+				homeworkMarks[i] = 0;
 		}
 		/*** Block ends ***/
 		
 		/*** Block for Prelim ***/
-		int prelimMarks;
+		double prelimMarks;
 		System.out.print("Enter grade for Prelim -->");
 		prelimMarks = input.nextInt();
 		while(prelimMarks > 100 || prelimMarks < 0) {
-			System.out.println("Invalid entry.");
+			System.out.println("Input should be less than 100.");
 			System.out.print("Enter grade for Prelim -->");
 			prelimMarks = input.nextInt();
 		}
-		System.out.println(prelimMarks);
 		/*** Blocks Ends ***/
 		
 		/***Block for Final ***/
-		int finalMarks;
+		double finalMarks;
 		System.out.print("Enter grade for Final -->");
 		finalMarks = input.nextInt();
 		while(finalMarks > 100 || finalMarks < 0) {
-			System.out.println("Invalid entry.");
+			System.out.println("Input should be less than 100.");
 			System.out.print("Enter grade for Final -->");
 			finalMarks = input.nextInt();
 		}
-		System.out.println(finalMarks);
 		/*** Block Ends ***/
 		
 		/*** Block for Quiz ***/
-		int[] quizMarks = new int[5];
+		double[] quizMarks = new double[5];
 		
 		for(int i = 0; i < 5; i++) {
 			System.out.print("Enter Grade for Quiz # " + (i+1) +" --> ");
 			quizMarks[i] = input.nextInt();
 			if(quizMarks[i] > 10 || quizMarks[i] < 0) {
-				System.out.println("Invalid input.");
+				System.out.println("Input should be less than 10.");
 				i--;
 				continue;
 			}
@@ -74,20 +71,19 @@ public class gradCal {
 		
 		FinalScore finalScoreObj = new FinalScore(homeworkMarks, prelimMarks, finalMarks, quizMarks);
 		System.out.println(finalScoreObj.toString());
-		System.out.println(finalScoreObj.finalScoreCal());
 		System.out.println(finalScoreObj.finalGrade());
 	}
 }
 
 class HomeworkCal{
-	private int[] homeworkMarks = new int[5];
-	private int hwFinal;
+	private double[] homeworkMarks = new double[5];
+	private double hwFinal;
 	
-	public HomeworkCal(int[] homeworkMarks) {
+	public HomeworkCal(double[] homeworkMarks) {
 		this.homeworkMarks = homeworkMarks;
 	}
 	
-	public int twentyPercent() {
+	public double twentyPercent() {
 		for(int i = 0; i < 5; i++) {
 			hwFinal += homeworkMarks[i]; 
 		}
@@ -102,15 +98,15 @@ class HomeworkCal{
 }
 
 class prelimCal extends HomeworkCal{
-	private int prelimMarks;
-	private int prelimFinal;
+	private double prelimMarks;
+	private double prelimFinal;
 	
-	public prelimCal(int[] homeworkMarks, int prelimMarks) {
+	public prelimCal(double[] homeworkMarks, double prelimMarks) {
 		super(homeworkMarks);
 		this.prelimMarks = prelimMarks;
 	}
 	
-	public int thirtyPercent() {
+	public double thirtyPercent() {
 		prelimFinal = (prelimMarks / 100) * 30;
 		return prelimFinal;
 	}
@@ -122,35 +118,35 @@ class prelimCal extends HomeworkCal{
 }
 
 class FinalCal extends prelimCal{
-	private int finalMarks;
-	private int finalFinal;
+	private double finalMarks;
+	private double finalFinal;
 	
-	public FinalCal(int[] homeworkMarks, int prelimMarks, int finalMarks) {
+	public FinalCal(double[] homeworkMarks, double prelimMarks, double finalMarks) {
 		super(homeworkMarks, prelimMarks);
 		this.finalMarks = finalMarks;
 	}
 	
-	public int fourtyPercent() {
+	public double fourtyPercent() {
 		finalFinal = (finalMarks / 100) * 40;
 		return finalFinal;
 	}
 	
 	@Override
 	public String toString() {
-		return "\nFinal absolute Marks: " + fourtyPercent() + super.toString();
+		return "\nFinal absolute Marks: " + fourtyPercent() + " " + super.toString();
 	}
 }
 
 class QuizCal extends FinalCal{
-	private int[] quizMarks = new int[5];
-	private int quizFinal;
+	private double[] quizMarks = new double[5];
+	private double quizFinal;
 	
-	public QuizCal(int[] homeworkMarks, int prelimMarks, int finalMarks, int[] quizMarks) {
+	public QuizCal(double[] homeworkMarks, double prelimMarks, double finalMarks, double[] quizMarks) {
 		super(homeworkMarks, prelimMarks, finalMarks);
 		this.quizMarks = quizMarks;
 	}
 	
-	public int tenPercent() {
+	public double tenPercent() {
 		for(int i = 0; i < 5; i++) {
 			quizFinal += quizMarks[i]; 
 		}
@@ -160,26 +156,24 @@ class QuizCal extends FinalCal{
 	
 	@Override
 	public String toString() {
-		return "\nQuiz absolute Marks: " + tenPercent() + super.toString();
+		return "\nQuiz absolute Marks: " + tenPercent() + " " + super.toString();
 	}
 }
 
 class FinalScore extends QuizCal{
-	private int finalScore;
+	private double finalScore;
 	private String finalGrade = "A";
 
-	public FinalScore(int[] homeworkMarks, int prelimMarks, int finalMarks, int[] quizMarks) {
+	public FinalScore(double[] homeworkMarks, double prelimMarks, double finalMarks, double[] quizMarks) {
 		super(homeworkMarks, prelimMarks, finalMarks, quizMarks);
 	}
 	
-	public int finalScoreCal() {
+	public double finalScoreCal() {
 		finalScore = tenPercent() + twentyPercent() + thirtyPercent() + fourtyPercent();
-		System.out.println(finalScore);
 		return finalScore;
 	}
 	
 	public String finalGrade() {
-		
 		if(finalScoreCal() > 90)
 			finalGrade = "A";
 		else if(finalScoreCal() > 80 && finalScoreCal() < 91)
@@ -196,7 +190,6 @@ class FinalScore extends QuizCal{
 			finalGrade = "D";
 		else if(finalScoreCal() < 33)
 			finalGrade = "F";
-		
-		return finalGrade;
+		return "\n\tYour Final Score is ---> " + finalScoreCal() + "\n\tYour Final Grade is ---> " + finalGrade;
 	}
 }
